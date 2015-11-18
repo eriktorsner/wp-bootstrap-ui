@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+SRC_DIR="`pwd`"
+cd "`dirname "$0"`"
+cd '../eriktorsner/wp-bootstrap/bin'
+BIN_TARGET="`pwd`/wpbootstrap"
+cd "$SRC_DIR"
+"$BIN_TARGET" "$@"

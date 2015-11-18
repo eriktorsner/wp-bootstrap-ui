@@ -22,6 +22,9 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
     }
 } else {
     if (is_admin()) {
+        define('WPBSUI_ROOT', dirname(__FILE__));
         require_once 'includes/admin-pages.php';
+        require_once 'includes/helpers.php';
+        require_once 'includes/appsettings.php';
     }
 }

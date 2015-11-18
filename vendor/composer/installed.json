@@ -1,0 +1,48 @@
+[
+    {
+        "name": "eriktorsner/wp-bootstrap",
+        "version": "0.2.2",
+        "version_normalized": "0.2.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/eriktorsner/wp-bootstrap.git",
+            "reference": "f269836aa6cef0726653a33aa1f31e48bd2db3f9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/eriktorsner/wp-bootstrap/zipball/f269836aa6cef0726653a33aa1f31e48bd2db3f9",
+            "reference": "f269836aa6cef0726653a33aa1f31e48bd2db3f9",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2015-11-07 16:32:01",
+        "bin": [
+            "bin/wpbootstrap"
+        ],
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Wpbootstrap\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Erik Torsner",
+                "email": "erik@torgesta.com",
+                "role": "lead"
+            }
+        ],
+        "description": "Utils for bootstrapping a WordPress installation",
+        "homepage": "https://github.com/eriktorsner/wp-bootstrap/",
+        "keywords": [
+            "wordpress"
+        ]
+    }
+]

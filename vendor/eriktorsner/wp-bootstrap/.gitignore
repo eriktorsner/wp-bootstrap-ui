@@ -1,0 +1,6 @@
+build/
+www/
+localsettings.json
+appsettings.json
+*.sublime-project
+*.sublime-workspace

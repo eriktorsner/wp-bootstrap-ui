@@ -1,0 +1,66 @@
+#!/usr/bin/env php
+<?php
+
+$search = array(
+    __DIR__ . '/../../../autoload.php', __DIR__ . '/../../autoload.php', 
+    __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php',
+    __DIR__ . '/../../vendor/autoload.php',
+);
+
+foreach ($search as $file) {
+    if (file_exists($file)) {
+        define('WPBOOTSTRAP_COMPOSER_INSTALL', $file);
+        break;
+    }
+}
+if (!defined('WPBOOTSTRAP_COMPOSER_INSTALL')) {
+    fwrite(STDERR,
+        'You need to set up the project dependencies using the following commands:' . PHP_EOL .
+        'wget http://getcomposer.org/composer.phar' . PHP_EOL .
+        'php composer.phar install' . PHP_EOL
+    );
+    die(1);
+}
+require_once WPBOOTSTRAP_COMPOSER_INSTALL;
+define('BASEPATH', realpath(dirname(WPBOOTSTRAP_COMPOSER_INSTALL) . '/../'));
+
+if(count($argv) < 2) {
+    die("At least one argument expected\n");
+}
+
+switch($argv[1]) {
+    case 'wp-bootsrap':
+        $bootstrap = Wpbootstrap\Bootstrap::getInstance();
+        $bootstrap->bootstrap();
+        break;
+    case 'wp-install':
+        $bootstrap = Wpbootstrap\Bootstrap::getInstance();
+        $bootstrap->install();
+        break;        
+    case 'wp-setup':
+        $bootstrap = Wpbootstrap\Bootstrap::getInstance();
+        $bootstrap->setup();
+        break;                
+    case 'wp-update':
+        $bootstrap = Wpbootstrap\Bootstrap::getInstance();
+        $bootstrap->update();
+        break;
+    case 'wp-export':
+        $export = Wpbootstrap\Export::getInstance();
+        $export->export();
+        break;
+    case 'wp-import':
+        $import = Wpbootstrap\Import::getInstance();
+        $import->import();
+        break;
+    case 'wp-init':
+        $initBootstrap = Wpbootstrap\Initbootstrap::getInstance();
+        $initBootstrap->init();
+        break;                
+    case 'wp-init-composer':
+        $initBootstrap = Wpbootstrap\Initbootstrap::getInstance();
+        $initBootstrap->initComposer();
+        break;        
+    default:
+        die("Command {$argv[1]} not recognized\n");       
+}

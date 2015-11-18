@@ -6,7 +6,7 @@ class wsbui_AppsettingsManager
 
     public function createFile(&$viewData)
     {
-        global $wp_filesystem;
+        global $wp_filesystem, $wp_registered_sidebars;
 
         if (!wpbsui_initFileSystem()) {
             return;
@@ -38,6 +38,7 @@ class wsbui_AppsettingsManager
 
         $wpbootstrap = new stdClass();
 
+        // posts
         $wpbootstrap->posts = new stdClass();
         $postTypes = get_post_types();
         foreach ($postTypes as $type) {
@@ -46,7 +47,7 @@ class wsbui_AppsettingsManager
             }
 
             if (isset($_POST['post_all_'.$type]) && $_POST['post_all_'.$type] == 1) {
-                $wpbootstrap->posts->$type = array('*');
+                $wpbootstrap->posts->$type = '*';
             } else {
                 $selected = wpbsui_getSelected('post_'.$type.'_');
                 if (count($selected) > 0) {
@@ -61,6 +62,7 @@ class wsbui_AppsettingsManager
             unset($wpbootstrap->posts);
         }
 
+        // taxonomies
         $wpbootstrap->taxonomies = new stdClass();
         $taxonomies = get_taxonomies();
         foreach ($taxonomies as $taxonomy) {
@@ -69,7 +71,7 @@ class wsbui_AppsettingsManager
             }
 
             if (isset($_POST['term_all_'.$taxonomy]) && $_POST['term_all_'.$taxonomy] == 1) {
-                $wpbootstrap->taxonomies->$taxonomy = array('*');
+                $wpbootstrap->taxonomies->$taxonomy = '*';
             } else {
                 $selected = wpbsui_getSelected('term_'.$taxonomy.'_');
                 if (count($selected) > 0) {
@@ -84,6 +86,7 @@ class wsbui_AppsettingsManager
             unset($wpbootstrap->taxonomies);
         }
 
+        // menus
         $wpbootstrap->menus = new stdClass();
         $locations = get_theme_mod('nav_menu_locations');
         $menus = get_terms('nav_menu', array( 'hide_empty' => true ));
@@ -100,16 +103,30 @@ class wsbui_AppsettingsManager
             }
         }
 
+        // sidebars
+        $wpbootstrap->sidebars = array();
+        $selected = wpbsui_getSelected('sidebar_');
+        foreach ($wp_registered_sidebars as $key => $sidebar) {
+            if (isset($selected[$key])) {
+                $wpbootstrap->sidebars[] = $key;
+            }
+        }
+        if (count((array) $wpbootstrap->sidebars) == 0) {
+            unset($wpbootstrap->sidebars);
+        }
+
         $appsettings->wpbootstrap = $wpbootstrap;
         $out = $bstrp->prettyPrint(json_encode($appsettings));
 
-        $file = WPBSUI_CONTENT.'/appSettings.json';
+        $file = WPBSUI_CONTENT.'/appsettings.json';
         $wp_filesystem->put_contents($file, $out, false);
     }
 
     public function initViewdata(&$viewData)
     {
-        $file = WPBSUI_CONTENT.'/appSettings.json';
+        global $wp_registered_sidebars;
+
+        $file = WPBSUI_CONTENT.'/appsettings.json';
         if (file_exists($file)) {
             $viewData->appsettings = json_decode(file_get_contents($file));
         } else {
@@ -181,5 +198,8 @@ class wsbui_AppsettingsManager
             }
             $viewData->allTaxonomies[] = $tax;
         }
+
+        // Sidebars.
+        $viewData->sidebars = $wp_registered_sidebars;
     }
 }

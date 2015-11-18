@@ -119,7 +119,7 @@
                             $type = $postType->post_type;
                             $selected = "";
                             if (isset($viewData->appsettings->wpbootstrap->posts->$type)) {
-                                if (in_array('*', $viewData->appsettings->wpbootstrap->posts->$type)) {
+                                if ($viewData->appsettings->wpbootstrap->posts->$type === '*') {
                                     $selected = "checked";
                                 }
                             }
@@ -161,7 +161,7 @@
                             $tax = $taxonomy->name;
                             $selected = "";
                             if (isset($viewData->appsettings->wpbootstrap->taxonomies->$tax)) {
-                                if (in_array('*', $viewData->appsettings->wpbootstrap->taxonomies->$tax)) {
+                                if ($viewData->appsettings->wpbootstrap->taxonomies->$tax === '*') {
                                     $selected = "checked";
                                 }
                             }
@@ -208,6 +208,31 @@
                     <?php endforeach ?>
                 </td>
             </tr>
+
+
+            <tr>
+                <td colspan="2">
+                    <hr>
+                    <p>Select sidebars to include. When you mark a sidebar for inclusion, all widgets
+                        in it will be included as well.</p>
+                </td>
+            </tr>
+            <tr>
+                <th>Sidebars</th>
+                <td>
+                    <?php foreach ($viewData->sidebars as $key => $sidebar):?>
+                        <?php
+                            $selected = "";
+                            if (@in_array($key, $viewData->appsettings->wpbootstrap->sidebars)) {
+                                $selected = "checked";
+                            }
+                        ?>
+                        <input name="sidebar_<?php echo $key?>" type="checkbox" value="1" <?php echo $selected?>>
+                        <label for="sidebar_<?php echo $key?>"><?php echo $sidebar['name']?> </label>&nbsp;&nbsp;
+                    <?php endforeach ?>
+                </td>
+            </tr>
+
 
 
 

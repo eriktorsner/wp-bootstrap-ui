@@ -1,6 +1,6 @@
-<form method="POST" action="tools.php?page=wpbsui_page">
+<form method="POST" action="tools.php?page=wpbsui_page&tab=appsettings">
     <input type="hidden" name="tab" value="appsettings">
-    <input type="hidden" name="action" value="createsettings">
+    <input type="hidden" name="action" value="createsappettings">
 
     <table class="form-table">
         <tbody>
@@ -37,9 +37,9 @@
                 <td>
                     <?php foreach ($viewData->existingThemes as $key => $theme):?>
                         <?php
-                            $selected = "";
+                            $selected = '';
                             if (@in_array($key, $viewData->appsettings->themes->standard)) {
-                                $selected = "checked";
+                                $selected = 'checked';
                             }
                         ?>
 
@@ -60,9 +60,9 @@
                     <select name="activeTheme">
                     <?php foreach ($viewData->existingThemes as $key => $theme):?>
                         <?php
-                            $selected = "";
+                            $selected = '';
                             if ($key == $activeTheme) {
-                                $selected = "selected";
+                                $selected = 'selected';
                             }
                         ?>
                         <option value="<?php echo $key?>" <?php echo $selected?>><?php echo $theme->Name?></option>
@@ -84,9 +84,9 @@
                 <td>
                     <?php foreach ($viewData->existingPlugins as $key => $plugin):?>
                         <?php
-                            $selected = "";
+                            $selected = '';
                             if (@in_array($plugin['slug'], $viewData->appsettings->plugins->standard)) {
-                                $selected = "checked";
+                                $selected = 'checked';
                             }
                         ?>
                         <input name="plugin_<?php echo $plugin['slug']?>" type="checkbox" value="1" <?php echo $selected?>>
@@ -117,10 +117,10 @@
                     <td>
                         <?php
                             $type = $postType->post_type;
-                            $selected = "";
+                            $selected = '';
                             if (isset($viewData->appsettings->wpbootstrap->posts->$type)) {
                                 if ($viewData->appsettings->wpbootstrap->posts->$type === '*') {
-                                    $selected = "checked";
+                                    $selected = 'checked';
                                 }
                             }
                         ?>
@@ -129,10 +129,14 @@
 
                         <?php foreach ($postType->posts as $post):?>
                             <?php
-                                $selected = "";
+                                $selected = '';
                                 if (isset($viewData->appsettings->wpbootstrap->posts->$type)) {
-                                    if (in_array($post->name, $viewData->appsettings->wpbootstrap->posts->$type)) {
-                                        $selected = "checked";
+                                    $arrType = $viewData->appsettings->wpbootstrap->posts->$type;
+                                    if (!is_array($arrType) && $arrType == '*') {
+                                        $arrType = array();
+                                    }
+                                    if (in_array($post->name, $arrType)) {
+                                        $selected = 'checked';
                                     }
                                 }
                             ?>
@@ -159,10 +163,10 @@
                     <td>
                         <?php
                             $tax = $taxonomy->name;
-                            $selected = "";
+                            $selected = '';
                             if (isset($viewData->appsettings->wpbootstrap->taxonomies->$tax)) {
                                 if ($viewData->appsettings->wpbootstrap->taxonomies->$tax === '*') {
-                                    $selected = "checked";
+                                    $selected = 'checked';
                                 }
                             }
                         ?>
@@ -171,10 +175,14 @@
 
                         <?php foreach ($taxonomy->terms as $term):?>
                             <?php
-                                $selected = "";
+                                $selected = '';
                                 if (isset($viewData->appsettings->wpbootstrap->taxonomies->$tax)) {
-                                    if (in_array($term->slug, $viewData->appsettings->wpbootstrap->taxonomies->$tax)) {
-                                        $selected = "checked";
+                                    $arrTax = $viewData->appsettings->wpbootstrap->taxonomies->$tax;
+                                    if (!is_array($arrTax) && $arrTax == '*') {
+                                        $arrTax = array();
+                                    }
+                                    if (in_array($term->slug, $arrTax)) {
+                                        $selected = 'checked';
                                     }
                                 }
                             ?>
@@ -197,10 +205,10 @@
                 <td>
                     <?php foreach ($viewData->menus as $menu):?>
                         <?php
-                            $selected = "";
+                            $selected = '';
                             $menuSlug = $menu->slug;
                             if (isset($viewData->appsettings->wpbootstrap->menus->$menuSlug)) {
-                                $selected = "checked";
+                                $selected = 'checked';
                             }
                         ?>
                         <input name="menu_<?php echo $menuSlug?>" type="checkbox" value="1" <?php echo $selected?>>
@@ -222,9 +230,9 @@
                 <td>
                     <?php foreach ($viewData->sidebars as $key => $sidebar):?>
                         <?php
-                            $selected = "";
+                            $selected = '';
                             if (@in_array($key, $viewData->appsettings->wpbootstrap->sidebars)) {
-                                $selected = "checked";
+                                $selected = 'checked';
                             }
                         ?>
                         <input name="sidebar_<?php echo $key?>" type="checkbox" value="1" <?php echo $selected?>>

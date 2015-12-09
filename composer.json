@@ -1,0 +1,5 @@
+{
+    "require": {
+        "eriktorsner/wp-bootstrap": "0.2.*"
+    }
+}

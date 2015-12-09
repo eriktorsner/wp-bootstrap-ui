@@ -1,5 +1,6 @@
 <?php
-class wsbui_AppsettingsManager
+
+class wpbsui_AppsettingsManager
 {
     private $excludedTypes = array('revision', 'nav_menu_item', 'attachment');
     private $excludedTaxonomies = array('nav_menu', 'link_category', 'post_format');
@@ -89,7 +90,7 @@ class wsbui_AppsettingsManager
         // menus
         $wpbootstrap->menus = new stdClass();
         $locations = get_theme_mod('nav_menu_locations');
-        $menus = get_terms('nav_menu', array( 'hide_empty' => true ));
+        $menus = get_terms('nav_menu', array('hide_empty' => true));
         $selected = wpbsui_getSelected('menu_');
         foreach ($menus as $menu) {
             $menuName = $menu->name;
@@ -173,7 +174,7 @@ class wsbui_AppsettingsManager
         }
 
         // menus
-        $viewData->menus = get_terms('nav_menu', array( 'hide_empty' => true ));
+        $viewData->menus = get_terms('nav_menu', array('hide_empty' => true));
 
         // Taxonomies
         $viewData->allTaxonomies = array();
@@ -188,7 +189,7 @@ class wsbui_AppsettingsManager
             $tax->name = $taxonomy;
             $tax->terms = array();
 
-            $terms = get_terms($taxonomy, array( 'hide_empty' => false ));
+            $terms = get_terms($taxonomy, array('hide_empty' => false));
             foreach ($terms as $term) {
                 $item = new stdClass();
                 $item->id = $term->term_id;

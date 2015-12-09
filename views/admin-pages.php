@@ -22,13 +22,10 @@
         <h2 class="nav-tab-wrapper">
         <?php foreach ($viewData->tabs as $name => $tab): ?>
             <?php $class = ($tab['slug'] == $viewData->tab_slug) ? 'nav-tab-active' : ''; ?>
-            <a class="nav-tab <?php echo $class?>" href="?page=<?php echo $plugin_slug?>&amp;tab=<?php echo $tab['slug']?>"><?php echo $name?></a>
+            <a class="nav-tab <?php echo $class?>" href="?page=wpbsui_page&amp;tab=<?php echo $tab['slug']?>"><?php echo $name?></a>
         <?php endforeach ?>
-
-        <?php include 'tab-'.$viewData->tab_slug.'.php'; ?>
-
     </div>
 
-
+    <?php include 'tab-'.$viewData->tab_slug.'.php'; ?>
 
 </div>

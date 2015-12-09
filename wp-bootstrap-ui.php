@@ -23,8 +23,11 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
 } else {
     if (is_admin()) {
         define('WPBSUI_ROOT', dirname(__FILE__));
-        require_once 'includes/admin-pages.php';
-        require_once 'includes/helpers.php';
-        require_once 'includes/appsettings.php';
+        require_once WPBSUI_ROOT.'/includes/admin-pages.php';
+        require_once WPBSUI_ROOT.'/includes/helpers.php';
+        require_once WPBSUI_ROOT.'/includes/appsettings.php';
+        require_once WPBSUI_ROOT.'/includes/settings.php';
+        require_once WPBSUI_ROOT.'/includes/export.php';
+        require_once WPBSUI_ROOT.'/includes/optionsDefaults.php';
     }
 }

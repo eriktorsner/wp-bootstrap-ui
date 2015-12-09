@@ -1,4 +1,5 @@
 <?php
+
 namespace Wpbootstrap;
 
 class Bootstrap
@@ -11,13 +12,15 @@ class Bootstrap
 
     private static $self = false;
     private $wpIncluded = false;
+    private $initiated = false;
 
     const NETURALURL = '@@__NEUTRAL__@@';
+    const VERSION = '0.2.4';
 
     public static function getInstance()
     {
         if (!self::$self) {
-            self::$self = new Bootstrap();
+            self::$self = new self();
         }
 
         return self::$self;
@@ -28,42 +31,59 @@ class Bootstrap
         self::$self = false;
     }
 
-    public function init($e)
+    public function init()
     {
         global $argv;
+
+        if ($this->initiated) {
+            return;
+        }
 
         if (!defined('BASEPATH')) {
             define('BASEPATH', getcwd());
         }
 
         $this->argv = $argv;
-        array_shift($this->argv);
-        array_shift($this->argv);
+        if (is_null($this->argv)) {
+            $argv = array();
+        } else {
+            array_shift($this->argv);
+            array_shift($this->argv);
+        }
 
         if ($this->requireSettings) {
             $this->localSettings = new Settings('local');
             $this->appSettings = new Settings('app');
             $this->validateSettings();
         }
+
+        $this->initated = false;
     }
 
-    public function bootstrap($e = null)
+    public function bootstrap()
     {
-        $this->init($e);
+        $this->init();
         $this->install();
         $this->setup();
     }
 
-    public function install($e = null)
+    public function install()
     {
-        $this->init($e);
+        $this->init();
         $wpcmd = $this->getWpCommand();
 
+        $cmd = 'rm -rf ~/.wp-cli/cache/core/';
+        exec($cmd);
+
         $cmd = $wpcmd.'core download --force';
+        if (isset($this->appSettings->version)) {
+            $cmd .= ' --version='.$this->appSettings->version;
+        }
+        echo "$cmd\n";
         exec($cmd);
 
         $cmd = $wpcmd.sprintf(
-            "core config --dbname=%s --dbuser=%s --dbpass=%s --quiet",
+            'core config --dbname=%s --dbuser=%s --dbpass=%s --quiet',
             $this->localSettings->dbname,
             $this->localSettings->dbuser,
             $this->localSettings->dbpass
@@ -84,18 +104,30 @@ class Bootstrap
         exec($cmd);
     }
 
-    public function setup($e = null)
+    public function setup()
     {
-        $this->init($e);
+        $this->init();
 
         $this->installPlugins();
         $this->installThemes();
         $this->applySettings();
     }
 
-    public function update($e = null)
+    public function reset()
     {
-        $this->init($e);
+        $this->init();
+        $this->init();
+        $wpcmd = $this->getWpCommand();
+        $cmd = $wpcmd.'db reset --yes';
+        exec($cmd);
+
+        $cmd = 'rm -rf '.$this->localSettings->wppath.'/*';
+        exec($cmd);
+    }
+
+    public function update()
+    {
+        $this->init();
         $wpcmd = $this->getWpCommand();
 
         if (count($this->argv) == 0) {
@@ -137,11 +169,11 @@ class Bootstrap
         if (isset($this->appSettings->plugins->local)) {
             $local = $this->appSettings->plugins->local;
             foreach ($local as $plugin) {
-                $cmd = sprintf("rm -f %s/wp-content/plugins/%s", $this->localSettings->wppath, $plugin);
+                $cmd = sprintf('rm -f %s/wp-content/plugins/%s', $this->localSettings->wppath, $plugin);
                 exec($cmd);
 
                 $cmd = sprintf(
-                    "ln -s %s/wp-content/plugins/%s %s/wp-content/plugins/%s",
+                    'ln -s %s/wp-content/plugins/%s %s/wp-content/plugins/%s',
                     BASEPATH,
                     $plugin,
                     $this->localSettings->wppath,
@@ -157,11 +189,11 @@ class Bootstrap
         if (isset($this->appSettings->plugins->localcopy)) {
             $this->local = $appSettings->plugins->localcopy;
             foreach ($local as $plugin) {
-                $cmd = sprintf("rm -f %s/wp-content/plugins/%s", $this->localSettings->wppath, $plugin);
+                $cmd = sprintf('rm -f %s/wp-content/plugins/%s', $this->localSettings->wppath, $plugin);
                 exec($cmd);
 
                 $cmd = sprintf(
-                    "cp -a %s/wp-content/plugins/%s %s/wp-content/plugins/%s",
+                    'cp -a %s/wp-content/plugins/%s %s/wp-content/plugins/%s',
                     BASEPATH,
                     $plugin,
                     $this->localSettings->wppath,
@@ -194,11 +226,11 @@ class Bootstrap
         if (isset($this->appSettings->themes->local)) {
             $local = $this->appSettings->themes->local;
             foreach ($local as $theme) {
-                $cmd = sprintf("rm -f %s/wp-content/themes/%s", $this->localSettings->wppath, $theme);
+                $cmd = sprintf('rm -f %s/wp-content/themes/%s', $this->localSettings->wppath, $theme);
                 exec($cmd);
 
                 $cmd = sprintf(
-                    "ln -s %s/wp-content/themes/%s %s/wp-content/themes/%s",
+                    'ln -s %s/wp-content/themes/%s %s/wp-content/themes/%s',
                     BASEPATH,
                     $theme,
                     $this->localSettings->wppath,
@@ -211,11 +243,11 @@ class Bootstrap
         if (isset($this->appSettings->themes->localcopy)) {
             $local = $this->appSettings->themes->localcopy;
             foreach ($local as $theme) {
-                $cmd = sprintf("rm -f %s/wp-content/themes/%s", $this->localSettings->wppath, $theme);
+                $cmd = sprintf('rm -f %s/wp-content/themes/%s', $this->localSettings->wppath, $theme);
                 exec($cmd);
 
                 $cmd = sprintf(
-                    "cp -a %s/wp-content/themes/%s %s/wp-content/themes/%s",
+                    'cp -a %s/wp-content/themes/%s %s/wp-content/themes/%s',
                     BASEPATH,
                     $plugin,
                     $this->localSettings->wppath,
@@ -236,7 +268,7 @@ class Bootstrap
         $wpcmd = $this->getWpCommand();
         if (isset($this->appSettings->settings)) {
             foreach ($this->appSettings->settings as $key => $value) {
-                $cmd  = $wpcmd."option update $key ";
+                $cmd = $wpcmd."option update $key ";
                 $cmd .= '"'.$value.'"';
                 exec($cmd);
             }
@@ -257,6 +289,7 @@ class Bootstrap
         if (!$good) {
             echo "\nAt least one configuration file is missing or contains invalid JSON\n";
             echo "Consider running command wp-init to set up template setting files\n";
+            die();
         }
     }
 
@@ -301,7 +334,7 @@ class Bootstrap
                 $key_array[$i] = $val->$key;
                 $temp_array[$i] = $val;
             }
-            $i++;
+            ++$i;
         }
 
         return $temp_array;
@@ -316,10 +349,10 @@ class Bootstrap
         $ends_line_level = null;
         $json_length = strlen($json);
 
-        for ($i = 0; $i < $json_length; $i++) {
+        for ($i = 0; $i < $json_length; ++$i) {
             $char = $json[$i];
             $new_line_level = null;
-            $post = "";
+            $post = '';
             if ($ends_line_level !== null) {
                 $new_line_level = $ends_line_level;
                 $ends_line_level = null;
@@ -346,14 +379,14 @@ class Bootstrap
                         break;
 
                     case ':':
-                        $post = " ";
+                        $post = ' ';
                         break;
 
-                    case " ":
+                    case ' ':
                     case "\t":
                     case "\n":
                     case "\r":
-                        $char = "";
+                        $char = '';
                         $ends_line_level = $new_line_level;
                         $new_line_level = null;
                         break;
@@ -377,10 +410,14 @@ class Bootstrap
     public function includeWordPress()
     {
         if (!$this->wpIncluded) {
-            $old = set_error_handler("\\Wpbootstrap\\Bootstrap::noError");
-            require_once $this->localSettings->wppath."/wp-load.php";
+            $before = ob_get_level();
+            $old = set_error_handler('\\Wpbootstrap\\Bootstrap::noError');
+            require_once $this->localSettings->wppath.'/wp-load.php';
             set_error_handler($old);
             $this->wpIncluded = true;
+            if (ob_get_level() > $before) {
+                ob_end_clean();
+            }
         }
     }
 
@@ -390,6 +427,10 @@ class Bootstrap
 
     public function getFiles($folder)
     {
+        $ret = array();
+        if (!file_exists($folder)) {
+            return $ret;
+        }
         $files = scandir($folder);
         foreach ($files as $file) {
             if ($file != '..' && $file != '.') {

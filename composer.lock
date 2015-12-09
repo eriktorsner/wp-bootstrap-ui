@@ -1,0 +1,63 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "ee67c49c206760a717b00444e3568b69",
+    "content-hash": "e7b628b72502e8144b96e18041961cd9",
+    "packages": [
+        {
+            "name": "eriktorsner/wp-bootstrap",
+            "version": "0.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eriktorsner/wp-bootstrap.git",
+                "reference": "caada03136fed545b9d403367473a48ac3d0fcc5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eriktorsner/wp-bootstrap/zipball/caada03136fed545b9d403367473a48ac3d0fcc5",
+                "reference": "caada03136fed545b9d403367473a48ac3d0fcc5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "bin": [
+                "bin/wpbootstrap"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Wpbootstrap\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erik Torsner",
+                    "email": "erik@torgesta.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "Utils for bootstrapping a WordPress installation",
+            "homepage": "https://github.com/eriktorsner/wp-bootstrap/",
+            "keywords": [
+                "wordpress"
+            ],
+            "time": "2015-12-07 12:56:12"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
